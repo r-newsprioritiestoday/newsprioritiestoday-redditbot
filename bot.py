@@ -47,6 +47,8 @@ for result in results:
     
     newssummary += "\n^(Source: " + result["source"] + " @ " + str(result["datetime"]) + ")"
     newssummary += "\n\n"
+
+newssummary += "For more, visit /r/newspriorities today."
     
 
 
