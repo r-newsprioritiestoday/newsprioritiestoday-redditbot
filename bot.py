@@ -57,4 +57,4 @@ print(newssummary)
 subreddit = reddit.subreddit('newsprioritiestoday')
 
 now = datetime.now()
-subreddit.submit(now.strftime("%Y-%m-%d") + " - Daily News Priorities", selftext = newssummary)
+# subreddit.submit(now.strftime("%Y-%m-%d") + " - Daily News Priorities", selftext = newssummary)
