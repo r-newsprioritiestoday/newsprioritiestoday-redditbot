@@ -18,7 +18,7 @@ class DateTimeSerializer(Serializer):
 serialization = SerializationMiddleware()
 serialization.register_serializer(DateTimeSerializer(), 'TinyDate')
 
-db = TinyDB('../data/db.json', storage=serialization)  
+db = TinyDB('../newsprioritytoday-data/db.json', storage=serialization)  
 reddit = praw.Reddit('bot', user_agent='newsprioritytoday:test user agent')
 
 
