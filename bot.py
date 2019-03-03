@@ -45,7 +45,7 @@ for result in results:
 
         newssummary += "\n"
     
-    newssummary += "\n^(Source: " + result["source"] + " @ " + str(result["datetime"]) + ")"
+    newssummary += "\n^(Source: " + result["source"] + " @ " + str(result["datetime"]) + " UTC+1)"
     newssummary += "\n\n"
 
 newssummary += "For more, visit /r/newspriorities today."
@@ -54,7 +54,7 @@ newssummary += "For more, visit /r/newspriorities today."
 
 print(newssummary)
 # post the info on the subreddit
-subreddit = reddit.subreddit('reddit_api_test')
+subreddit = reddit.subreddit('newsprioritiestoday')
 
 now = datetime.now()
-# subreddit.submit(now.strftime("%Y-%m-%d") + " - Daily News Priorities", selftext = newssummary)
+subreddit.submit(now.strftime("%Y-%m-%d") + " - Daily News Priorities", selftext = newssummary)
