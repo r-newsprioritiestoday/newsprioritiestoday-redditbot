@@ -33,7 +33,7 @@ results = db.search(where('datetime') > (datetime.now() - timedelta(hours = 1)))
 
 # create reddit post
 newssummary = "Here are your daily Top 5 news from all over the world: \n\n"
-newssummary += "All news are kept in their original language. To translate to english, right click on a sentence an select 'Translate to english' (in chrome) \n\n"
+newssummary += "All news are kept in their original language. To translate to english, right click on a sentence and select 'Translate to english' (in chrome) \n\n"
 
 for result in results:
     newssummary += "## " + result["country"] + "\n"
