@@ -1,3 +1,4 @@
+import requests 
 import praw
 from tinydb import TinyDB, Query, where
 from tinydb_serialization import Serializer, SerializationMiddleware
@@ -18,7 +19,7 @@ class DateTimeSerializer(Serializer):
 serialization = SerializationMiddleware()
 serialization.register_serializer(DateTimeSerializer(), 'TinyDate')
 
-db = TinyDB('../newsprioritytoday-data/db.json', storage=serialization)  
+db = TinyDB('../newsprioritiestoday-data/db.json', storage=serialization)  
 reddit = praw.Reddit('bot', user_agent='newsprioritytoday:test user agent')
 
 
@@ -33,21 +34,37 @@ results = db.search(where('datetime') > (datetime.now() - timedelta(hours = 1)))
 
 # create reddit post
 newssummary = "Here are your daily Top 5 news from all over the world: \n\n"
-newssummary += "All news are kept in their original language. To translate to english, right click on a sentence and select 'Translate to english' (in chrome) \n\n"
 
 for result in results:
     newssummary += "## " + result["country"] + "\n"
 
     for article in result["articles"][:5]:
-        newssummary += "- " + article["headline"]
+        # get translation
+        if result['code'] != 'en':
+            payload = {'q': article["headline"], 'langpair': result['code'] + '|en', 'de': 'do-oe@outlook.com'}
+            r = requests.get('https://api.mymemory.translated.net/get', params=payload)
+            
+            response = r.json()
+            newssummary += "- " + response["responseData"]["translatedText"]
+        else:
+            newssummary += "- " + article["headline"]
+
         if article["text"] != "":
-            newssummary += " - " + article["text"]
+
+            if result['code'] != 'en':
+                payload = {'q': article["text"], 'langpair': result['code'] + '|en', 'de': 'do-oe@outlook.com'}
+                r = requests.get('https://api.mymemory.translated.net/get', params=payload)
+                response = r.json()
+                newssummary += " - " + response["responseData"]["translatedText"]
+            else:
+                newssummary += " - " + article["text"]
 
         newssummary += "\n"
     
     newssummary += "\n^(Source: " + result["source"] + " @ " + str(result["datetime"]) + " UTC+1)"
     newssummary += "\n\n"
 
+newssummary += "Headlines were machine-translated using translated.com services. \n\n"
 newssummary += "For more, visit /r/newspriorities today."
     
 
