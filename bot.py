@@ -31,7 +31,7 @@ reddit = praw.Reddit('bot', user_agent='newsprioritytoday:test user agent')
 # get data that was created less than an hour ago.
 # ideally the scraper and the bot should run at different times to avoid any result overlapping
 results = db.search(where('datetime') > (datetime.now() - timedelta(hours = 1)))
-
+#results = db.search((where('datetime') > (datetime.now() - timedelta(hours = 4))) & (where('datetime') < (datetime.now() - timedelta(hours = 5))))
 # create reddit post
 newssummary = "Here are your daily Top 5 news from all over the world: \n\n"
 
@@ -54,6 +54,7 @@ for result in results:
             if result['code'] != 'en':
                 payload = {'q': article["text"], 'langpair': result['code'] + '|en', 'de': 'do-oe@outlook.com'}
                 r = requests.get('https://api.mymemory.translated.net/get', params=payload)
+                print(r.text)
                 response = r.json()
                 newssummary += " - " + response["responseData"]["translatedText"]
             else:
@@ -70,8 +71,10 @@ newssummary += "For more, visit /r/newspriorities today."
 
 
 print(newssummary)
+input("\n\nPress Enter to post on subreddit...")
+
 # post the info on the subreddit
 subreddit = reddit.subreddit('newsprioritiestoday')
 
 now = datetime.now()
-# subreddit.submit(now.strftime("%Y-%m-%d") + " - Daily News Priorities", selftext = newssummary)
+subreddit.submit(now.strftime("%Y-%m-%d") + " - Daily News Priorities", selftext = newssummary)
